@@ -36,26 +36,22 @@ pipeline {
         """
     }
 }
-
-        stage('Push to Docker Hub') {
-            steps {
-                echo "Pushing Docker images to Docker Hub..."
-
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker_credentials',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-
-                    bat "docker push ${DOCKER_IMAGE}:${IMAGE_TAG}"
-                    bat "docker push ${DOCKER_IMAGE}:latest"
-                }
-            }
-        }
+stage('Push to Docker Hub') {
+    echo 'Pushing Docker images to Docker Hub...'
+    withCredentials([
+        usernamePassword(
+            credentialsId: 'docker_credentials',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )
+    ]) {
+        bat """
+            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+            docker push kraj234/sampledeployapp:19
+            docker push kraj234/sampledeployapp:latest
+        """
     }
-
+}
     post {
         success {
             echo "Build, Docker image creation, and push successful!"
