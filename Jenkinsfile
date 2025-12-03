@@ -5,7 +5,7 @@
         DOCKER_IMAGE = 'kraj234/SampleDeployApp'
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/kraj234/SampleDeployApp.git'
-        GIT_BRANCH = 'main'
+        GIT_BRANCH = 'master'
     }
     
     stages {
