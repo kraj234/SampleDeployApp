@@ -1,8 +1,12 @@
 # Stage 1: Base runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+
+# Expose the port your Web API actually listens on
 EXPOSE 7155
-ENV ASPNETCORE_URLS=http://+:7155
+
+# Correct way to configure ASP.NET Core URL binding
+ENV ASPNETCORE_URLS=http://0.0.0.0:7155
 
 # Stage 2: Build and restore dependencies
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
