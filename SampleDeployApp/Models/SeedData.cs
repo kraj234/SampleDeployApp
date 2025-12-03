@@ -26,6 +26,13 @@
                     Description = "This is a description for Sample Product 3.",
                     Price = 39.99m,
                     StockQuantity = 200
+                },
+                 new Product
+                {
+                    Name = "Sample Product 4",
+                    Description = "This is a description for Sample Product 4.",
+                    Price = 59.99m,
+                    StockQuantity = 700
                 }
             };
         }
