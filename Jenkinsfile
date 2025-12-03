@@ -28,14 +28,16 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo "Building Docker image..."
-                bat """
-                    docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest .
-                """
-            }
-        }
+     stage('Build Docker Image') {
+    steps {
+        echo 'Building Docker image...'
+        bat """
+        set DOCKER_BUILDKIT=0
+        docker build -t kraj234/sampledeployapp:24 -t kraj234/sampledeployapp:latest .
+        """
+    }
+}
+
 
         stage('Push to Docker Hub') {
             steps {
