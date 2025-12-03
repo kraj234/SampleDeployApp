@@ -51,7 +51,7 @@ stage('Push to Docker Hub') {
             docker push kraj234/sampledeployapp:latest
         """
     }
-}
+}|
     post {
         success {
             echo "Build, Docker image creation, and push successful!"
