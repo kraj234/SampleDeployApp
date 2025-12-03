@@ -28,15 +28,20 @@ pipeline {
             }
         }
 
-     stage('Build Docker Image') {
+stage('Build Docker Image') {
     steps {
         echo 'Building Docker image...'
-        bat """
-        set DOCKER_BUILDKIT=0
-        docker build -t kraj234/sampledeployapp:24 -t kraj234/sampledeployapp:latest .
-        """
+        script {
+            def TAG = env.BUILD_NUMBER
+            def IMAGE = "kraj234/sampledeployapp"
+
+            bat """
+                docker build -t ${IMAGE}:${TAG} -t ${IMAGE}:latest .
+            """
+        }
     }
 }
+
 
 
         stage('Push to Docker Hub') {
