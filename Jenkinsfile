@@ -6,6 +6,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = "https://github.com/kraj234/SampleDeployApp.git"
         GIT_BRANCH = "master"
+		DOCKER_BUILDKIT = "0"
     }
 
     stages {
