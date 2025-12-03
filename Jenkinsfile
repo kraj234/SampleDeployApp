@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "kraj234/sampledeployapp"
+        DOCKER_IMAGE = "rajk7378/sampledeployapp"
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = "https://github.com/kraj234/SampleDeployApp.git"
         GIT_BRANCH = "master"
@@ -33,7 +33,7 @@ stage('Build Docker Image') {
         echo 'Building Docker image...'
         script {
             def TAG = env.BUILD_NUMBER
-            def IMAGE = "kraj234/sampledeployapp"
+            def IMAGE = "rajk7378/sampledeployapp"
 
             bat """
                 docker build -t ${IMAGE}:${TAG} -t ${IMAGE}:latest .
