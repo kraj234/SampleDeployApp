@@ -10,21 +10,21 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy only the project file first (for caching restore layer)
-COPY ["SampleDeployApp..csproj", "./"]
+COPY ["SampleDeployApp.csproj", "./"]
 
 # Restore project dependencies
-RUN dotnet restore "SampleDeployApp..csproj"
+RUN dotnet restore "SampleDeployApp.csproj"
 
 # Copy the rest of the application source code
 COPY . .
 
 # Build the application
-RUN dotnet build "SampleDeployApp..csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "SampleDeployApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Stage 3: Publish for deployment
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "SampleDeployApp..csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "SampleDeployApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Stage 4: Final runtime image
 FROM base AS final
