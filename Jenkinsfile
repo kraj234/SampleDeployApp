@@ -4,13 +4,16 @@
     environment {
         DOCKER_IMAGE = 'kraj234/SampleDeployApp'
         IMAGE_TAG = "${BUILD_NUMBER}"
+        GIT_REPO = 'https://github.com/kraj234/SampleDeployApp.git'
+        GIT_BRANCH = 'main'  // Change to 'master' if that's your default branch
     }
     
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out code...'
-                checkout scm
+                echo 'Checking out code from GitHub...'
+                git branch: "${GIT_BRANCH}", 
+                    url: "${GIT_REPO}"
             }
         }
         
@@ -18,7 +21,7 @@
             steps {
                 echo 'Building .NET project...'
                 script {
-                    dir('SomeRubbishAPI') {
+                    dir('SampleDeployApp') {
                         bat "dotnet restore"
                         bat "dotnet build --configuration Release"
                     }
@@ -50,25 +53,26 @@
             }
         }
         
-        stage('Deploy to Kubernetes') {
-            steps {
-                echo 'Deploying to Docker Desktop Kubernetes...'
-                script {
-                    withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-                        bat "kubectl apply -f backend-deploy.yml --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout restart deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout status deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
-                    }
-                }
-            }
-        }
+        // Deployment stage skipped
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         echo 'Deploying to Docker Desktop Kubernetes...'
+        //         script {
+        //             withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
+        //                 bat "kubectl apply -f backend-deploy.yml --kubeconfig=%KUBECONFIG%"
+        //                 bat "kubectl rollout restart deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
+        //                 bat "kubectl rollout status deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     post {
         success {
-            echo 'Build, Docker image creation, push, and deployment successful!'
-            echo 'API accessible at http://localhost:7155'
-            echo 'Products endpoint: http://localhost:7155/api/Products'
+            echo 'Build, Docker image creation, and push successful!'
+            echo 'Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG}'
+            echo 'Docker image: ${DOCKER_IMAGE}:latest'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
