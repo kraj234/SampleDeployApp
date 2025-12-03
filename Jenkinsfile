@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = 'kraj234/SampleDeployApp'
+        DOCKER_IMAGE = 'kraj234/sampledeployapp'
         IMAGE_TAG = "${BUILD_NUMBER}"
-        GIT_REPO = 'https://github.com/kraj234/SampleDeployApp.git'
+        GIT_REPO = 'https://github.com/kraj234/sampledeployapp.git'
         GIT_BRANCH = 'master'
     }
     
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 echo 'Building .NET project...'
                 script {
-                    dir('SampleDeployApp') {
+                    dir('sampledeployapp') {
                         bat "dotnet restore"
                         bat "dotnet build --configuration Release"
                     }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
-                    dir('SampleDeployApp') {
+                    dir('sampledeployapp') {
                         bat "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest ."
                     }
                 }
