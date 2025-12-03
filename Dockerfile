@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Copy only the project file first (for caching restore layer)
+# Copy only the project file first (fixed: removed extra dot)
 COPY ["SampleDeployApp.csproj", "./"]
 
 # Restore project dependencies
@@ -29,5 +29,9 @@ RUN dotnet publish "SampleDeployApp.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 # Stage 4: Final runtime image
 FROM base AS final
 WORKDIR /app
+
+# Copy published output
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SampleDeployApp..dll"]
+
+# ✔ Fixed DLL name (no double dot)
+ENTRYPOINT ["dotnet", "SampleDeployApp.dll"]
