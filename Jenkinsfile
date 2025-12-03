@@ -28,15 +28,14 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                echo "Building Docker image..."
-                dir('SampleDeployApp') {
-                    bat """
-                        docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest .
-                    """
-                }
-            }
-        }
+    steps {
+        echo "Building Docker image..."
+        
+        bat """
+            docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest .
+        """
+    }
+}
 
         stage('Push to Docker Hub') {
             steps {
