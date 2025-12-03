@@ -28,30 +28,35 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-    steps {
-        echo "Building Docker image..."
-        
-        bat """
-            docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest .
-        """
+            steps {
+                echo "Building Docker image..."
+                bat """
+                    docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest .
+                """
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo "Pushing Docker images to Docker Hub..."
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'docker_credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
+                        docker push ${DOCKER_IMAGE}:latest
+                    """
+                }
+            }
+        }
     }
-}
-stage('Push to Docker Hub') {
-    echo 'Pushing Docker images to Docker Hub...'
-    withCredentials([
-        usernamePassword(
-            credentialsId: 'docker_credentials',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
-        )
-    ]) {
-        bat """
-            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-            docker push kraj234/sampledeployapp:19
-            docker push kraj234/sampledeployapp:latest
-        """
-    }
-}|
+
     post {
         success {
             echo "Build, Docker image creation, and push successful!"
