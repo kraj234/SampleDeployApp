@@ -5,7 +5,7 @@
         DOCKER_IMAGE = 'kraj234/SampleDeployApp'
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/kraj234/SampleDeployApp.git'
-        GIT_BRANCH = 'main'  // Change to 'master' if that's your default branch
+        GIT_BRANCH = 'main'
     }
     
     stages {
@@ -52,27 +52,13 @@
                 }
             }
         }
-        
-        // Deployment stage skipped
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         echo 'Deploying to Docker Desktop Kubernetes...'
-        //         script {
-        //             withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-        //                 bat "kubectl apply -f backend-deploy.yml --kubeconfig=%KUBECONFIG%"
-        //                 bat "kubectl rollout restart deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
-        //                 bat "kubectl rollout status deployment/somerubbishapi-deployment --kubeconfig=%KUBECONFIG%"
-        //             }
-        //         }
-        //     }
-        // }
     }
     
     post {
         success {
             echo 'Build, Docker image creation, and push successful!'
-            echo 'Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG}'
-            echo 'Docker image: ${DOCKER_IMAGE}:latest'
+            echo "Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG}"
+            echo "Docker image: ${DOCKER_IMAGE}:latest"
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
